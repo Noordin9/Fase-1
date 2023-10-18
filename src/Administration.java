@@ -1,42 +1,204 @@
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
-/**
- * class Administration represents the core of the application by showing
- * the main menu, from where all other functionality is accessible, either
- * directly or via sub-menus.
- * An Administration instance needs a User as input, which is passed via the
- * constructor to the data member 'currentUser'.
- * The patient data is available via the data member currentPatient.
- */
 class Administration {
-    static final int STOP = 0;
-    static final int VIEW = 1;
+    ArrayList<Patient> patientList; //List of Patients
+    ArrayList<User> userList; //List of Users
 
-    Patient currentPatient;            // The currently selected patient
-    User currentUser;               // the current user of the program.
+    Administration(ArrayList<Patient> patientList, ArrayList<User> userList) {
+        this.patientList = patientList;
+        this.userList = userList;
 
-    /**
-     * Constructor
-     */
-    Administration(User user) {
-        currentUser = user;
-        currentPatient = new Patient(1, "Van Puffelen", "Pierre", LocalDate.of(2000, 2, 29));
-
-        System.out.format("Current user: [%d] %s\n", user.getUserID(), user.getUserName());
     }
 
     void menu() {
-        var scanner = new Scanner(System.in);  // User input via this scanner.
+        Scanner scanner = new Scanner(System.in);
+        Userlist.showList();
+        clearConsole();
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("=".repeat(29));
+            System.out.println("Please select your department:");
+            System.out.println("=".repeat(29));
+            System.out.println("[1] Intensive Care Unit ");
+            System.out.println("[2] Oncology ");
+            System.out.println("[3] Physiotherapy ");
+            System.out.println("[4] Apothecary ");
+            System.out.println("=".repeat(29));
+            System.out.println("[5] Return to UserList");
+            System.out.println("[0] Exit app ");
+            System.out.println("=".repeat(29));
+            System.out.println("Enter choice#: ");
 
-        boolean nextCycle = true;
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    Dptmanager("ICU",Userlist.currentUser);
+                   /* boolean exitsubmenuICU = false;
+                    while (!exitsubmenuICU) {
+
+                        Userlist.showcurrentUser();
+                        PatientList.viewList();
+
+                        int submenuChoice1 = scanner.nextInt();
+
+                        if (submenuChoice1 == 0) {
+                            exitsubmenuICU = true;
+                            }
+                        else {
+                                System.out.println("You have returned to your LOP.");
+                            }
+                        }*/
+            break;
+
+            case 2:
+             /*   boolean exitsubmenuOnc = false;
+                while (!exitsubmenuOnc) {
+                    Userlist.showcurrentUser();
+                    PatientList.viewList();
+                    int submenuChoice2 = scanner.nextInt();
+                    if (submenuChoice2 == 0) {
+                        exitsubmenuOnc = true;
+                    }
+                    else {
+                        System.out.println("You have returned to your LOP.");
+                    }
+                }*/
+                Dptmanager("Oncology",Userlist.currentUser);
+                    break;
+
+                case 3:
+              /*      boolean exitsubmenuPhys = false;
+                    while (!exitsubmenuPhys) {
+
+                        Userlist.showcurrentUser();
+                        PatientList.viewList();
+                        int submenuChoice3 = scanner.nextInt();
+                        if (submenuChoice3 == 0) {
+                            exitsubmenuPhys = true;
+                        } else {
+                                System.out.println("You have returned to your LOP.");
+                        }
+                    }*/
+                    Dptmanager("Physio",Userlist.currentUser);
+                    break;
+
+                case 4:
+                    Dptmanager("Apothecary",Userlist.currentUser);
+
+                /*    boolean exitsubmenuApo = false;
+                    while (!exitsubmenuApo) {
+                        Userlist.showcurrentUser();
+                        PatientList.viewList();
+                        int submenuChoice4 = scanner.nextInt();
+                        if (submenuChoice4 == 0) {
+                            exitsubmenuApo = true;
+                        }else {
+                            System.out.println("You have returned to your LOP.");
+                        }
+                    }*/
+                    break;
+                case 5:
+                    clearConsole();
+                    Userlist.showList();
+                    clearConsole();
+                break;
+                case 0:
+                    exit = true;
+                    System.out.println("You exited the app.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    }
+
+    //Manages switch case prompts to reduce redundancy
+  public static void Dptmanager(String departmentName, int currentUser) {
+        Scanner scanner = new Scanner(System.in);
+        boolean exitSubmenu = false;
+        clearConsole();
+        while (!exitSubmenu) {
+            System.out.println("Current department: " + departmentName);
+            Userlist.showcurrentUser();
+            PatientList.viewList();
+            int submenuChoice = scanner.nextInt();
+            if (submenuChoice == 0) {
+                exitSubmenu = true;
+                clearConsole();
+            } else {
+                clearConsole();
+                System.out.println("You have returned to your Department's patient list.");
+                System.out.println("=".repeat(29));
+
+            }
+        }
+    }
+
+    public static void clearConsole() {
+        // Print a series of empty lines to clear the console
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
+}
+//   Userlist.showList();
+    //      System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+/*   selectedUser = userList.get(Userlist.currentUser);
+                    System.out.println("=".repeat(23));
+                    System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                    System.out.println("=".repeat(23));*/
+//      Userlist.getcurrentUser();
+    //       selectedUser = new User(3, "Adnan Ali");
+    //        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+/*   selectedUser = userList.get(Userlist.currentUser);
+                        System.out.println("=".repeat(23));
+                        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                        System.out.println("=".repeat(23));*/
+//   Userlist.getcurrentUser();
+    //        selectedUser = new User(4, "Bart Zanten");
+    //        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+//            Userlist.getcurrentUser();
+    //       selectedUser = new User(1, "Bart Zanten");
+/*  selectedUser = userList.get(Userlist.currentUser);
+                        System.out.println("=".repeat(23));
+                        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                        System.out.println("=".repeat(23));*/
+//     selectedUser = new User(2, "Adam Hawa");
+    //     System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+/*                break;
+            case 2:
+                selectedUser = new User(2, "Adam Hawa");
+                System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                break;
+            case 3:
+                selectedUser = new User(3, "Adnan Ali");
+                System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                break;
+            case 4:
+                selectedUser = new User(4, "Akram Akkrum");
+                System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                break;
+
+            default:
+                System.out.println("Invalid choice, please try again");
+        }
+    }
+
+
+// [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+        }
+
+
+//   var scanner = new Scanner(System.in);  // User input via this scanner.
+
+ /*       boolean nextCycle = true;
         while (nextCycle) {
-            System.out.format("%s\n", "=".repeat(80));
-            System.out.format("Current patient: %s\n", currentPatient.fullName());
 
-            /*
-             Print menu on screen
-            */
+            System.out.format("%s\n", "=".repeat(50));
+
             System.out.format("%d:  STOP\n", STOP);
             System.out.format("%d:  View patient data\n", VIEW);
 
@@ -57,4 +219,8 @@ class Administration {
             }
         }
     }
-}
+} */
+/*   selectedUser = userList.get(Userlist.currentUser);
+                        System.out.println("=".repeat(23));
+                        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+                        System.out.println("=".repeat(23));*/  // System.out.format("Current patient: %s\n", currentPatient.fullName());*/

@@ -1,12 +1,13 @@
 
 class ZorgApp {
     public static void main(String[] args) {
-        PatientList patientList = new PatientList();
-        Userlist userlist = new Userlist();
-        userlist.addUser();
+        LoPatients patientList = new LoPatients();
+        LoUsers UserList = new LoUsers();
+        Meds.addMeds();
+        UserList.addUser();
         patientList.addPatient();
-        Administration administration = new Administration(PatientList.patientList, Userlist.ListofUsers);
+        Administration administration = new Administration(LoPatients.GPList,LoPatients.PhysioList,LoPatients.ICUList,LoPatients.ApothecaryList, LoUsers.UserList, Meds.LoMeds);
 
-        administration.menu();
+        Administration.menu();
     }
 }

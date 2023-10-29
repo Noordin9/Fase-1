@@ -1,41 +1,56 @@
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 class Administration {
-    ArrayList<Patient> patientList; //List of Patients
+    public static String departmentName; //DPT name
+    static ArrayList<Meds>LoMeds; //List of Medication
     ArrayList<User> userList; //List of Users
+    static Map<String, ArrayList<Patient>> dptPatientList = new HashMap<>(); // Hashmap to connect departments with specific patient data
 
-    Administration(ArrayList<Patient> patientList, ArrayList<User> userList) {
-        this.patientList = patientList;
+
+    Administration(ArrayList<Patient> GPList, ArrayList<Patient>PhysioList,ArrayList<Patient>ICUList,ArrayList<Patient>ApothecaryList, ArrayList<User> userList, ArrayList<Meds> LoMeds) {
+        dptPatientList.put("ICU",ICUList);
+        dptPatientList.put("G.P",GPList);
+        dptPatientList.put("Physio",PhysioList);
+        dptPatientList.put("Apothecary",ApothecaryList);
         this.userList = userList;
+        this.LoMeds = LoMeds;
 
     }
-
-    void menu() {
-        Scanner scanner = new Scanner(System.in);
-        Userlist.showList();
+        public static void menu() {
+        LoUsers.viewList();
         clearConsole();
+        Scanner scanner = new Scanner(System.in);
+
         boolean exit = false;
         while (!exit) {
-            System.out.println("=".repeat(29));
+            User selectedUser = LoUsers.UserList.get(LoUsers.currentUser);
+            System.out.format("========= USER ID:%d ==========\n", selectedUser.getUserID());
+            System.out.println("Current User: " + selectedUser.getUserName());
+            System.out.println("=".repeat(35));
             System.out.println("Please select your department:");
-            System.out.println("=".repeat(29));
+            System.out.println("=".repeat(35));
             System.out.println("[1] Intensive Care Unit ");
-            System.out.println("[2] Oncology ");
+            System.out.println("[2] General Practicioner ");
             System.out.println("[3] Physiotherapy ");
             System.out.println("[4] Apothecary ");
-            System.out.println("=".repeat(29));
+            System.out.println("=".repeat(35));
             System.out.println("[5] Return to UserList");
             System.out.println("[0] Exit app ");
-            System.out.println("=".repeat(29));
+            System.out.println("=".repeat(35));
             System.out.println("Enter choice#: ");
 
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    Dptmanager("ICU",Userlist.currentUser);
-                   /* boolean exitsubmenuICU = false;
+                    departmentName = "ICU";
+
+                    Dptmanager("ICU", LoUsers.currentUser);
+                    exit = true;
+                   /* old code to mark my progression
+                   boolean exitsubmenuICU = false;
                     while (!exitsubmenuICU) {
 
                         Userlist.showcurrentUser();
@@ -50,10 +65,11 @@ class Administration {
                                 System.out.println("You have returned to your LOP.");
                             }
                         }*/
-            break;
+                    break;
 
             case 2:
-             /*   boolean exitsubmenuOnc = false;
+             /*  old code to mark my own progression
+              boolean exitsubmenuOnc = false;
                 while (!exitsubmenuOnc) {
                     Userlist.showcurrentUser();
                     PatientList.viewList();
@@ -65,11 +81,14 @@ class Administration {
                         System.out.println("You have returned to your LOP.");
                     }
                 }*/
-                Dptmanager("Oncology",Userlist.currentUser);
+                    departmentName = "G.P";
+                    Dptmanager("G.P", LoUsers.currentUser);
+                    exit = true;
                     break;
 
                 case 3:
-              /*      boolean exitsubmenuPhys = false;
+              /*      old code to mark my progression
+              boolean exitsubmenuPhys = false;
                     while (!exitsubmenuPhys) {
 
                         Userlist.showcurrentUser();
@@ -81,13 +100,18 @@ class Administration {
                                 System.out.println("You have returned to your LOP.");
                         }
                     }*/
-                    Dptmanager("Physio",Userlist.currentUser);
+                    departmentName = "Physio";
+                    Dptmanager("Physio", LoUsers.currentUser);
+                    exit = true;
                     break;
 
                 case 4:
-                    Dptmanager("Apothecary",Userlist.currentUser);
-
-                /*    boolean exitsubmenuApo = false;
+                    departmentName = "Apothecary";
+                    Dptmanager("Apothecary", LoUsers.currentUser);
+                    exit = true;
+                    break;
+                /*    old code to mark my progression
+                boolean exitsubmenuApo = false;
                     while (!exitsubmenuApo) {
                         Userlist.showcurrentUser();
                         PatientList.viewList();
@@ -98,76 +122,85 @@ class Administration {
                             System.out.println("You have returned to your LOP.");
                         }
                     }*/
-                    break;
                 case 5:
                     clearConsole();
-                    Userlist.showList();
+                    LoUsers.viewList();
+                    exit = true;
                     clearConsole();
                 break;
                 case 0:
                     exit = true;
                     System.out.println("You exited the app.");
+                    System.exit(420);
                     break;
                 default:
+                    clearConsole();
                     System.out.println("Invalid choice. Please try again.");
                     break;
             }
         }
     }
 
-    //Manages switch case prompts to reduce redundancy
-  public static void Dptmanager(String departmentName, int currentUser) {
-        Scanner scanner = new Scanner(System.in);
-        boolean exitSubmenu = false;
+    //Manages switch case prompts to reduce repitition
+        public static void Dptmanager(String departmentName, int currentUser) {
         clearConsole();
-        while (!exitSubmenu) {
-            System.out.println("Current department: " + departmentName);
-            Userlist.showcurrentUser();
-            PatientList.viewList();
-            int submenuChoice = scanner.nextInt();
-            if (submenuChoice == 0) {
-                exitSubmenu = true;
-                clearConsole();
-            } else {
-                clearConsole();
-                System.out.println("You have returned to your Department's patient list.");
-                System.out.println("=".repeat(29));
-
-            }
-        }
+        ArrayList<Patient> departmentList = dptPatientList.get(departmentName);
+        LoPatients.currentPatient = 0;
+        LoPatients.viewList(departmentName, departmentList);
+        Meds.viewMeds(departmentName);
     }
 
-    public static void clearConsole() {
-        // Print a series of empty lines to clear the console
-        for (int i = 0; i < 50; i++) {
+    // Print a series of empty lines to clear the console
+        public static void clearConsole() {
+        for (int i = 0; i < 45; i++) {
             System.out.println();
         }
     }
 }
+
+/*    Scanner scanner = new Scanner(System.in);
+        boolean exitSubmenu = false;
+      ArrayList<Patient> departmentList = dptPatientList.get(departmentName);
+
+        while (!exitSubmenu) {
+            int submenuChoice = -1;
+            submenuChoice = scanner.nextInt();
+
+            if (submenuChoice == 0) {
+                exitSubmenu = true;
+           } else if (submenuChoice >= 1 && submenuChoice <= LoPatients.PatientList.get(0).size()) {
+                LoPatients.currentPatient = submenuChoice -1;
+                departmentName = departmentName;
+                LoPatients.viewList(departmentName,departmentList);
+                Meds.viewMeds(departmentName);*/
+/*     } else {
+                clearConsole();
+                System.out.println("You have returned to your Department's patient list.");
+                System.out.println("=".repeat(29));*/
 //   Userlist.showList();
-    //      System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+//      System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
 /*   selectedUser = userList.get(Userlist.currentUser);
                     System.out.println("=".repeat(23));
                     System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
                     System.out.println("=".repeat(23));*/
 //      Userlist.getcurrentUser();
-    //       selectedUser = new User(3, "Adnan Ali");
-    //        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+//       selectedUser = new User(3, "Adnan Ali");
+//        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
 /*   selectedUser = userList.get(Userlist.currentUser);
                         System.out.println("=".repeat(23));
                         System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
                         System.out.println("=".repeat(23));*/
 //   Userlist.getcurrentUser();
-    //        selectedUser = new User(4, "Bart Zanten");
-    //        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+//        selectedUser = new User(4, "Bart Zanten");
+//        System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
 //            Userlist.getcurrentUser();
-    //       selectedUser = new User(1, "Bart Zanten");
+//       selectedUser = new User(1, "Bart Zanten");
 /*  selectedUser = userList.get(Userlist.currentUser);
                         System.out.println("=".repeat(23));
                         System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
                         System.out.println("=".repeat(23));*/
 //     selectedUser = new User(2, "Adam Hawa");
-    //     System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+//     System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
 /*                break;
             case 2:
                 selectedUser = new User(2, "Adam Hawa");

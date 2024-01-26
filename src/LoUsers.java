@@ -1,8 +1,11 @@
-import java.util.ArrayList;
-import java.util.Scanner;
-public class LoUsers {
+import java.util.*;
+public class LoUsers extends User {
     static int currentUser;
     static ArrayList<User> UserList = new ArrayList<>();
+
+    public LoUsers(int id, String name) {
+        super(id, name);
+    }
 
     void addUser() {
         UserList.add(new User(1,"Tamara Borgers"));
@@ -13,37 +16,50 @@ public class LoUsers {
     }
 
     public static void viewList() {
+
         Scanner scanner = new Scanner(System.in);
         boolean exitList = false;
         while (!exitList) {
-            System.out.println("=".repeat(35));
-            System.out.println("\t\tZonderZorgen");
-            System.out.println("=".repeat(35));
-            System.out.println("\t\tUser List:");
-            System.out.println("=".repeat(35));
+            try {
+                System.out.println("=".repeat(35));
+                System.out.println("\t\tZonderZorgen");
+                System.out.println("=".repeat(35));
+                System.out.println("\t\tUser List:");
+                System.out.println("=".repeat(35));
 
-            for (User user : UserList) {
-                System.out.printf("[%s] %s\n", user.getUserID(), user.getUserName());
-            }
+                for (User user : UserList) {
+                    System.out.printf("[%s] %s\n", user.getUserID(), user.getUserName());
+                }
 
-            System.out.println("=".repeat(35));
-            System.out.println("Enter User ID to continue:");
-            int choice = scanner.nextInt();
+                System.out.println("=".repeat(35));
+                System.out.println("Enter User ID to continue:");
+                int choice = scanner.nextInt();
 
-            if (choice >= 1 && choice <= UserList.size()) {
-
-                currentUser = choice - 1;
-                exitList = true;
-        } else {
+                if (choice >= 1 && choice <= UserList.size()) {
+                    currentUser = choice - 1;
+                    exitList = true;
+                } else {
+                    Administration.clearConsole();
+                    System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (InputMismatchException e) {
+                // Handle the exception
                 Administration.clearConsole();
-                System.out.println("Invalid choice. Please try again.");
+                System.out.println("Invalid input. Please enter a valid digit.");
+                // Consume invalid input to avoid an infinite loop
+                scanner.nextLine();
             }
         }
     }
 
-        static void displayUser() {
-            User selectedUser = LoUsers.UserList.get(LoUsers.currentUser);
-            System.out.format("User: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+        static void display (String departmentName,ArrayList<Patient>departmentList) {
+            User selectedUser = UserList.get(currentUser);
+            Patient selectedPatient = departmentList.get(LoPatients.currentPatient);
+            System.out.println("=".repeat(35));
+            System.out.println("Your Department: " + departmentName);
+            System.out.println("=".repeat(35));
+            System.out.format("Current user: [%d] %s\n", selectedUser.getUserID(), selectedUser.getUserName());
+            System.out.format("Current patient:[%d] %s \n", selectedPatient.id, selectedPatient.fullName());
             System.out.println("=".repeat(35));
         }
     }

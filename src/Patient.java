@@ -1,25 +1,21 @@
 import java.time.LocalDate;
+import java.util.List;
 
 class Patient {
- /*   static final int RETURN = 0;
-    static final int SURNAME = 1;
-    static final int FIRSTNAME = 2;
-    static final int DATEOFBIRTH = 3;*/
-
-    int id;
-    double weight;
-    double height;
-    int bmi;
-    String currentMeds;
-    String surname;
-    String firstName;
-    LocalDate dateOfBirth;
-
+    int id; // Patient ID
+    double weight; // " weight
+    double height; // " height
+    int bmi; // " BMI
+    String currentMeds; // " current medication
+    String surname; // " surname
+    String firstName; // " first name
+    LocalDate dateOfBirth; // " birthdate
+    double dosage;
 
     /**
      * Constructor
      */
-    Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double height, String currentMeds) {
+   Patient(int id, String surname, String firstName, LocalDate dateOfBirth, double weight, double height, String currentMeds, double dosage) {
         this.id = id;
         this.surname = surname;
         this.firstName = firstName;
@@ -28,35 +24,42 @@ class Patient {
         this.height = height;
         this.bmi = (int) BMIcalc();
         this.currentMeds = currentMeds;
+        this.dosage = dosage;
     }
+
     double BMIcalc() {
         return weight / (height * height);
     }
-    double getBMI() {
-        return bmi;
+    double getBMI() {return bmi;}
+    public void setFirstName(String firstName){this.firstName = firstName;}
+    public void setSurname(String surname){this.surname = surname;}
+    public void setWeight(double weight) {this.weight = weight;}
+    public void setHeight(double height) {
+        this.height = height;
     }
-  /*  static String calculateAge() {
-        LocalDate currentDate = LocalDate.now();
-        Period age = Period.between(dateOfBirth, currentDate);
+    public void setDosage(double dosage){this.dosage = dosage;}
+    public void setMeds(List<Meds> currentMeds){this.currentMeds = currentMeds.toString();}
 
-        int years = age.getYears();
-        return years + " years ";
-    }
-*/
-
-    String getSurname() {
-        return surname;
-    }
-
-    String getFirstName() {
-        return firstName;
-    }
 
     /**
      * Shorthand for a Patient's full name
      */
     String fullName() {
         return String.format("%s %s ", firstName, surname);
+    }
+
+    /**
+     * Shorthand for a Patient's last name
+     */
+    String getSurname() {
+        return surname;
+    }
+
+    /**
+     * Shorthand for a Patient's 1st name
+     */
+    String getFirstName() {
+        return firstName;
     }
 }
 

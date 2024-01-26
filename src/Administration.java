@@ -1,54 +1,61 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 class Administration {
-    public static String departmentName; //DPT name
+    static String departmentName; //DPT name
     static ArrayList<Meds>LoMeds; //List of Medication
     ArrayList<User> userList; //List of Users
-    static Map<String, ArrayList<Patient>> dptPatientList = new HashMap<>(); // Hashmap to connect departments with specific patient data
+    static Map<String, ArrayList<Patient>> dptPatientList = new HashMap<>(); // Hashmap to connect DPT with specific patient data
+    static Map<String, ArrayList<Meds>> dptMedsList = new HashMap<>(); // Hashmap to connect DPT with specific Meds
 
+    Administration(ArrayList<ArrayList<Patient>> PatientList, ArrayList<User> userList, ArrayList<ArrayList<Meds>> MedsList) {
+        dptPatientList.put("ICU",PatientList.get(0));
+        dptPatientList.put("G.P",PatientList.get(1));
+        dptPatientList.put("Physio",PatientList.get(2));
+        dptPatientList.put("Apothecary",PatientList.get(3));
 
-    Administration(ArrayList<Patient> GPList, ArrayList<Patient>PhysioList,ArrayList<Patient>ICUList,ArrayList<Patient>ApothecaryList, ArrayList<User> userList, ArrayList<Meds> LoMeds) {
-        dptPatientList.put("ICU",ICUList);
-        dptPatientList.put("G.P",GPList);
-        dptPatientList.put("Physio",PhysioList);
-        dptPatientList.put("Apothecary",ApothecaryList);
+        dptMedsList.put("ICU",MedsList.get(0));
+        dptMedsList.put("G.P",MedsList.get(1));
+        dptMedsList.put("Physio",MedsList.get(2));
+        dptMedsList.put("Apothecary",MedsList.get(3));
         this.userList = userList;
         this.LoMeds = LoMeds;
 
     }
-        public static void menu() {
+        public static void MainMenu(){
         LoUsers.viewList();
         clearConsole();
+        menu();
+    }
+        public static void menu() {
         Scanner scanner = new Scanner(System.in);
 
         boolean exit = false;
         while (!exit) {
-            User selectedUser = LoUsers.UserList.get(LoUsers.currentUser);
-            System.out.format("========= USER ID:%d ==========\n", selectedUser.getUserID());
-            System.out.println("Current User: " + selectedUser.getUserName());
-            System.out.println("=".repeat(35));
-            System.out.println("Please select your department:");
-            System.out.println("=".repeat(35));
-            System.out.println("[1] Intensive Care Unit ");
-            System.out.println("[2] General Practicioner ");
-            System.out.println("[3] Physiotherapy ");
-            System.out.println("[4] Apothecary ");
-            System.out.println("=".repeat(35));
-            System.out.println("[5] Return to UserList");
-            System.out.println("[0] Exit app ");
-            System.out.println("=".repeat(35));
-            System.out.println("Enter choice#: ");
+            try {
 
-            int choice = scanner.nextInt();
-            switch (choice) {
-                case 1:
-                    departmentName = "ICU";
+                User selectedUser = LoUsers.UserList.get(LoUsers.currentUser);
+                System.out.format("========= USER ID:%d ==========\n", selectedUser.getUserID());
+                System.out.println("Current User: " + selectedUser.getUserName());
+                System.out.println("=".repeat(35));
+                System.out.println("Please select your department:");
+                System.out.println("=".repeat(35));
+                System.out.println("[1] Intensive Care Unit ");
+                System.out.println("[2] General Practicioner ");
+                System.out.println("[3] Physiotherapy ");
+                System.out.println("[4] Apothecary ");
+                System.out.println("=".repeat(35));
+                System.out.println("[5] Return to UserList");
+                System.out.println("[0] Exit app ");
+                System.out.println("=".repeat(35));
+                System.out.println("Enter choice#: ");
 
-                    Dptmanager("ICU", LoUsers.currentUser);
-                    exit = true;
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        departmentName = "ICU";
+
+                        Dptmanager("ICU", LoUsers.currentUser);
+                        exit = true;
                    /* old code to mark my progression
                    boolean exitsubmenuICU = false;
                     while (!exitsubmenuICU) {
@@ -65,9 +72,9 @@ class Administration {
                                 System.out.println("You have returned to your LOP.");
                             }
                         }*/
-                    break;
+                        break;
 
-            case 2:
+                    case 2:
              /*  old code to mark my own progression
               boolean exitsubmenuOnc = false;
                 while (!exitsubmenuOnc) {
@@ -81,12 +88,12 @@ class Administration {
                         System.out.println("You have returned to your LOP.");
                     }
                 }*/
-                    departmentName = "G.P";
-                    Dptmanager("G.P", LoUsers.currentUser);
-                    exit = true;
-                    break;
+                        departmentName = "G.P";
+                        Dptmanager("G.P", LoUsers.currentUser);
+                        exit = true;
+                        break;
 
-                case 3:
+                    case 3:
               /*      old code to mark my progression
               boolean exitsubmenuPhys = false;
                     while (!exitsubmenuPhys) {
@@ -100,16 +107,16 @@ class Administration {
                                 System.out.println("You have returned to your LOP.");
                         }
                     }*/
-                    departmentName = "Physio";
-                    Dptmanager("Physio", LoUsers.currentUser);
-                    exit = true;
-                    break;
+                        departmentName = "Physio";
+                        Dptmanager("Physio", LoUsers.currentUser);
+                        exit = true;
+                        break;
 
-                case 4:
-                    departmentName = "Apothecary";
-                    Dptmanager("Apothecary", LoUsers.currentUser);
-                    exit = true;
-                    break;
+                    case 4:
+                        departmentName = "Apothecary";
+                        Dptmanager("Apothecary", LoUsers.currentUser);
+                        exit = true;
+                        break;
                 /*    old code to mark my progression
                 boolean exitsubmenuApo = false;
                     while (!exitsubmenuApo) {
@@ -122,32 +129,38 @@ class Administration {
                             System.out.println("You have returned to your LOP.");
                         }
                     }*/
-                case 5:
-                    clearConsole();
-                    LoUsers.viewList();
-                    exit = true;
-                    clearConsole();
-                break;
-                case 0:
-                    exit = true;
-                    System.out.println("You exited the app.");
-                    System.exit(420);
-                    break;
-                default:
-                    clearConsole();
-                    System.out.println("Invalid choice. Please try again.");
-                    break;
+                    case 5:
+                        clearConsole();
+                        LoUsers.viewList();
+                        exit = true;
+                        clearConsole();
+                        break;
+                    case 0:
+                        exit = true;
+                        System.out.println("You exited the app.");
+                        System.exit(420);
+                        break;
+                    default:
+                        clearConsole();
+                        System.out.println("Invalid choice. Please try again.");
+                        break;
+                }
+            } catch (InputMismatchException e){
+                clearConsole();
+                System.out.println("Invalid input. Please enter a valid digit.");
+                scanner.nextLine();
             }
         }
     }
 
-    //Manages switch case prompts to reduce repitition
+    /*Manages switch case prompts from Dptselection Menu to reduce repitition*/
         public static void Dptmanager(String departmentName, int currentUser) {
         clearConsole();
         ArrayList<Patient> departmentList = dptPatientList.get(departmentName);
+        ArrayList<Meds> departmentMeds = dptMedsList.get(departmentName);
         LoPatients.currentPatient = 0;
-        LoPatients.viewList(departmentName, departmentList);
-        Meds.viewMeds(departmentName);
+        LoPatients.viewList(departmentName, departmentList,departmentMeds);
+        Meds.viewMeds(departmentName,departmentList,departmentMeds);
     }
 
     // Print a series of empty lines to clear the console
